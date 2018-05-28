@@ -22,13 +22,16 @@ query user ($login: String!) {
 }`;
 
 export const ResultGrid = ({ login }) => {
-  if (!login) {
-    return null
-  }
-  return <Query query={FETCH_GIT_LOGIN} variables={{login}}>
+  return <Query query={FETCH_GIT_LOGIN} skip={!login} variables={{login}}>
       {
         ({loading, error, data}) => {
-          if (loading) { return <span>Fetching git user information!</span>; }
+          if (loading) {
+            if (!login) {
+              return null
+            } else {
+              return <span>Loading user data...</span>
+            }
+          }
           if (error) { return <span>Error while fetching data</span> }
           return (
             <div className="row">

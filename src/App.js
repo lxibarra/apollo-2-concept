@@ -2,6 +2,14 @@ import React, { Component } from 'react';
 import { Header } from './components/header/Header';
 import { Search } from './components/search/Search';
 import { ResultGrid } from './components/result-grid/result-grid';
+import { Query } from 'react-apollo';
+import gql from 'graphql-tag';
+
+const SEARCH = gql`
+  {
+    search @client
+  }
+`;
 
 class App extends Component {
   render() {
@@ -12,7 +20,14 @@ class App extends Component {
           <div className="row">
             <div className="col-sm-12">
                 <Search />
-                <ResultGrid login="lxibarra" />
+                <Query query={SEARCH}>
+                  {
+                    ({data, client}) => (
+                      <ResultGrid  login={data.search}/>
+                    )
+                  }
+                </Query>
+
             </div>
           </div>
         </div>
